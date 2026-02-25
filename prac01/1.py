@@ -1,3 +1,3 @@
 print("Hello")
 s = "bekzat"
-print(s[3:])
+print(s[:3])
