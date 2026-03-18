@@ -1,51 +1,34 @@
 import re
 import json
 
+with open("raw.txt", "r", encoding="utf-8") as f:
+    text = f.read()
 
-with open("raw.txt", "r") as file:
-    text = file.read()
+price_pattern = r"\b\d{1,3}(?: \d{3})*,\d{2}\b"
+prices_raw = re.findall(price_pattern, text)
 
+prices = []
+for price in prices_raw:
+    clean = price.replace(" ", "").replace(",", ".")
+    prices.append(float(clean))
 
-prices = re.findall(r"\d+\.\d{2}", text)
-prices = [float(p) for p in prices]
+product_pattern = r"\d+\.\n(.+)"
+products = re.findall(product_pattern, text)
 
+datetime_match = re.search(r"\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}:\d{2}", text)
+date_time = datetime_match.group(0) if datetime_match else None
 
-products = []
-lines = text.split("\n")
+payment_match = re.search(r"(Банковская карта|Наличные)", text)
+payment_method = payment_match.group(0) if payment_match else "Unknown"
 
-for line in lines:
-    match = re.match(r"([A-Za-z ]+)\s+(\d+\.\d{2})", line)
-    if match:
-        product = match.group(1).strip()
-        products.append(product)
+total = sum(prices)
 
-
-calculated_total = sum(prices)
-
-
-date_match = re.search(r"\d{4}-\d{2}-\d{2}", text)
-date = date_match.group() if date_match else None
-
-
-time_match = re.search(r"\d{2}:\d{2}", text)
-time = time_match.group() if time_match else None
-
-
-payment = None
-if "Card" in text:
-    payment = "Card"
-elif "Cash" in text:
-    payment = "Cash"
-
-
-data = {
+result = {
     "products": products,
     "prices": prices,
-    "total": calculated_total,
-    "date": date,
-    "time": time,
-    "payment": payment
+    "calculated_total": total,
+    "date_time": date_time,
+    "payment_method": payment_method
 }
 
-
-print(json.dumps(data, indent=4))
+print(json.dumps(result, ensure_ascii=False, indent=4))
