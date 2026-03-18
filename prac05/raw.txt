@@ -1,0 +1,14 @@
+SuperMart
+Address: 123 Main Street
+
+Date: 2024-01-15
+Time: 14:32
+
+Milk           2.50
+Bread          1.20
+Chocolate      3.75
+Apples         4.00
+
+Total:         11.45
+
+Payment Method: Card
