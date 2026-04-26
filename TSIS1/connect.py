@@ -1,9 +1,9 @@
 import psycopg2
+from config import DB_CONFIG
 
 def get_connection():
-    return psycopg2.connect(
-        host="localhost",
-        database="phonebook",
-        user="postgres",
-        password="Ayala2020"
-    )
+    try:
+        return psycopg2.connect(**DB_CONFIG)
+    except Exception as e:
+        print(f"Connection error: {e}")
+        return None
