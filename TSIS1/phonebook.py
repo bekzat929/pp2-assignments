@@ -56,7 +56,10 @@ def add_contact():
     if row:
         group_id = row[0]
     else:
-        cur.execute("INSERT INTO groups(name) VALUES(%s) RETURNING id", (group,))
+        cur.execute(
+            "INSERT INTO groups(name) VALUES(%s) RETURNING id",
+            (group,)
+        )
         group_id = cur.fetchone()[0]
 
     cur.execute("""
@@ -74,6 +77,7 @@ def add_contact():
         phone = input("Phone (empty to stop): ")
         if phone == "":
             break
+
         ptype = input("Type(home/work/mobile): ")
 
         cur.execute("""
@@ -83,6 +87,7 @@ def add_contact():
 
         conn.commit()
 
+    print("Contact added successfully!")
     conn.close()
 
 
@@ -150,11 +155,13 @@ def show_all():
 
     rows = cur.fetchall()
 
-    for row in rows:
-        print(row)
+    if not rows:
+        print("No contacts found.")
+    else:
+        for row in rows:
+            print(row)
 
     conn.close()
-
 
 # ---------------- SEARCH ----------------
 def find():
